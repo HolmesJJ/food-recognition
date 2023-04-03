@@ -15,3 +15,4 @@ mlruns/
 dataset/
 foodsg-5/
 foodsg-233/
+*.h5

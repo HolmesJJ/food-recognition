@@ -4,7 +4,6 @@
 
 import os
 import glob
-import pickle
 import matplotlib.pyplot as plt
 
 from keras.models import Model
@@ -13,7 +12,8 @@ from keras.layers import GlobalAveragePooling2D
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau
 from keras.callbacks import EarlyStopping
-from keras.applications import EfficientNetV2M
+from keras.applications import ResNet50V2
+from keras.applications import MobileNetV2
 from tensorflow.python.client import device_lib
 print(device_lib.list_local_devices())
 
@@ -27,7 +27,7 @@ VAL_DIRS = glob.glob("dataset/val/*")
 TEST_DIRS = glob.glob("dataset/test/*")
 
 BATCH_SIZE = 32
-MODEL_PATH = "model.h5"
+MODEL_PATH = "MobileNetV2.h5"  # ResNet50V2.h5, MobileNetV2.h5
 
 
 def show_food(name):
@@ -46,7 +46,7 @@ def show_food(name):
 
 
 def run_data_augmentation():
-    img_Datagen = ImageDataGenerator(
+    img_datagen = ImageDataGenerator(
         rescale=1 / 255,
         shear_range=10,
         zoom_range=0.3,
@@ -58,17 +58,15 @@ def run_data_augmentation():
         rotation_range=20,
         fill_mode="nearest"
     )
-    val_test_Datagen = ImageDataGenerator(
-        rescale=1 / 255
-    )
-    train_data = img_Datagen.flow_from_directory(TRAIN_PATH, batch_size=BATCH_SIZE, class_mode="categorical")
-    val_data = val_test_Datagen.flow_from_directory(VAL_PATH, batch_size=BATCH_SIZE, class_mode="categorical")
-    test_data = val_test_Datagen.flow_from_directory(TEST_PATH, batch_size=BATCH_SIZE, class_mode="categorical")
+    val_test_datagen = ImageDataGenerator(rescale=1 / 255)
+    train_data = img_datagen.flow_from_directory(TRAIN_PATH, batch_size=BATCH_SIZE, class_mode="categorical")
+    val_data = val_test_datagen.flow_from_directory(VAL_PATH, batch_size=BATCH_SIZE, class_mode="categorical")
+    test_data = val_test_datagen.flow_from_directory(TEST_PATH, batch_size=BATCH_SIZE, class_mode="categorical")
     return train_data, val_data, test_data
 
 
 def compile_model():
-    net = EfficientNetV2M(
+    net = MobileNetV2(
         weights="imagenet",
         include_top=False,
     )
@@ -95,14 +93,14 @@ def train():
                         batch_size=BATCH_SIZE)
 
     train_score = model.evaluate(train_data)
-    print("Test Loss: ", train_score[0])
-    print("Test Accuracy: ", train_score[1])
+    print("Train Loss: ", train_score[0])
+    print("Train Accuracy: ", train_score[1])
 
     test_score = model.evaluate(test_data)
     print("Test Loss: ", test_score[0])
     print("Test Accuracy: ", test_score[1])
 
-    pickle.dump(model, open(MODEL_PATH, "wb"))
+    model.save_weights(MODEL_PATH)
 
     plt.figure(figsize=(12, 8))
     plt.title("EVALUATION OF VGG19")

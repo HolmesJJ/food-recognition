@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from keras.models import Model
 from keras.layers import Dense
 from keras.layers import Dropout
+from keras.layers import BatchNormalization
 from keras.layers import GlobalAveragePooling2D
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau
@@ -26,7 +27,7 @@ VAL_DIRS = glob.glob("dataset/val/*")
 TEST_DIRS = glob.glob("dataset/test/*")
 
 BATCH_SIZE = 32
-MODEL_PATH = "MobileNetV2.h5"  # ResNet50V2.h5, MobileNetV2.h5
+MODEL_PATH = "ResNet50V2.h5"  # ResNet50V2.h5, MobileNetV2.h5
 
 
 def show_food(name):
@@ -65,7 +66,7 @@ def run_data_augmentation():
 
 
 def compile_model():
-    net = MobileNetV2(
+    net = ResNet50V2(
         weights="imagenet",
         include_top=False,
     )
@@ -74,8 +75,8 @@ def compile_model():
     x = net.output
     x = GlobalAveragePooling2D()(x)
     x = Dropout(0.2)(x)
-    x = Dense(128, activation="relu")(x)
-    x = Dropout(0.2)(x)
+    x = Dense(256, activation="relu")(x)
+    x = BatchNormalization()(x)
     predictions = Dense(len(TRAIN_DIRS), activation="softmax")(x)
     model = Model(inputs=net.input, outputs=predictions)
     early_stopping = EarlyStopping(monitor="val_accuracy", mode="max", patience=10, restore_best_weights=True)

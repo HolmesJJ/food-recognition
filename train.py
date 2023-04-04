@@ -15,8 +15,6 @@ from keras.callbacks import ReduceLROnPlateau
 from keras.callbacks import EarlyStopping
 from keras.applications import ResNet50V2
 from keras.applications import MobileNetV2
-from tensorflow.python.client import device_lib
-print(device_lib.list_local_devices())
 
 
 DATASET_DIRS = glob.glob("dataset/*")

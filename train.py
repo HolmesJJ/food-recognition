@@ -75,6 +75,7 @@ def compile_model():
     x = GlobalAveragePooling2D()(x)
     x = Dropout(0.2)(x)
     x = Dense(128, activation="relu")(x)
+    x = Dropout(0.2)(x)
     predictions = Dense(len(TRAIN_DIRS), activation="softmax")(x)
     model = Model(inputs=net.input, outputs=predictions)
     early_stopping = EarlyStopping(monitor="val_accuracy", mode="max", patience=10, restore_best_weights=True)

@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 from keras.models import Model
 from keras.layers import Dense
+from keras.layers import Dropout
 from keras.layers import GlobalAveragePooling2D
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau
@@ -74,6 +75,7 @@ def compile_model():
         layer.trainable = False
     x = net.output
     x = GlobalAveragePooling2D()(x)
+    x = Dropout(0.2)(x)
     x = Dense(128, activation="relu")(x)
     predictions = Dense(len(TRAIN_DIRS), activation="softmax")(x)
     model = Model(inputs=net.input, outputs=predictions)

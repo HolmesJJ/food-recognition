@@ -39,7 +39,7 @@ VAL_DIRS = glob.glob("dataset/val/*")
 TEST_DIRS = glob.glob("dataset/test/*")
 
 BATCH_SIZE = 32
-MODEL = "EfficientNetB0.h5"  # ResNet50V2.h5, MobileNetV2.h5, InceptionV3.h5, EfficientNetB0.h5
+MODEL = "MobileNetV2.h5"  # ResNet50V2.h5, MobileNetV2.h5, InceptionV3.h5, EfficientNetB0.h5
 CHECKPOINT_PATH = "checkpoints/" + MODEL
 MODEL_PATH = "models/" + MODEL
 LOG_PATH = "logs/" + MODEL
@@ -81,7 +81,7 @@ def run_data_augmentation():
 
 
 def compile_model():
-    net = EfficientNetB0(
+    net = MobileNetV2(
         weights="imagenet",
         include_top=False,
     )
@@ -98,7 +98,7 @@ def compile_model():
     checkpoint = ModelCheckpoint(CHECKPOINT_PATH, monitor="val_accuracy", save_best_only=True, verbose=1)
     lr = ReduceLROnPlateau(monitor="val_accuracy", mode="max", patience=10)
     csv_logger = CSVLogger(LOG_PATH)
-    optimizer = Adam(lr=0.00001)
+    optimizer = Adam(learning_rate=0.001)
     model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
     print(model.summary())
     return model, early_stopping, checkpoint, lr, csv_logger

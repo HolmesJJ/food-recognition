@@ -26,7 +26,6 @@ from keras.applications import ResNet50V2
 from keras.applications import MobileNetV2
 from keras.applications import InceptionV3
 from keras.applications import EfficientNetB0
-from keras.regularizers import l2
 from keras.optimizers import Adam
 
 
@@ -92,13 +91,16 @@ def compile_model():
     x = Dense(256, activation="relu")(x)
     x = Dropout(0.2)(x)
     x = BatchNormalization()(x)
-    predictions = Dense(len(TRAIN_DIRS), kernel_regularizer=l2(0.005), activation="softmax")(x)
+    x = Dense(256, activation="relu")(x)
+    x = Dropout(0.2)(x)
+    x = BatchNormalization()(x)
+    predictions = Dense(len(TRAIN_DIRS), activation="softmax")(x)
     model = Model(inputs=net.input, outputs=predictions)
     early_stopping = EarlyStopping(monitor="val_accuracy", mode="max", patience=10, restore_best_weights=True)
     checkpoint = ModelCheckpoint(CHECKPOINT_PATH, monitor="val_accuracy", save_best_only=True, verbose=1)
     lr = ReduceLROnPlateau(monitor="val_accuracy", mode="max", patience=10)
     csv_logger = CSVLogger(LOG_PATH)
-    optimizer = Adam(learning_rate=0.001)
+    optimizer = Adam(learning_rate=0.0001)
     model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
     print(model.summary())
     return model, early_stopping, checkpoint, lr, csv_logger
@@ -107,7 +109,7 @@ def compile_model():
 def train():
     train_data, val_data, test_data = run_data_augmentation()
     model, early_stopping, checkpoint, lr, csv_logger = compile_model()
-    history = model.fit(train_data, epochs=200,
+    history = model.fit(train_data, epochs=300,
                         validation_data=val_data,
                         callbacks=[early_stopping, checkpoint, lr, csv_logger],
                         batch_size=BATCH_SIZE)
@@ -123,7 +125,7 @@ def train():
     model.save_weights(MODEL_PATH)
 
     plt.figure(figsize=(12, 8))
-    plt.title("EVALUATION OF VGG19")
+    plt.title("EVALUATION")
     plt.subplot(2, 2, 1)
     plt.plot(history.history["loss"], label="Loss")
     plt.plot(history.history["val_loss"], label="Val_Loss")

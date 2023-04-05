@@ -1,5 +1,11 @@
 # https://www.kaggle.com/code/karan842/pneumonia-detection-transfer-learning-94-acc
 # https://www.kaggle.com/code/elcaiseri/mnist-simple-cnn-keras-accuracy-0-99-top-1#4.-Evaluate-the-model
+# https://www.kaggle.com/code/theimgclist/multiclass-food-classification-using-tensorflow
+# https://www.kaggle.com/code/theeyeschico/food-classification-using-tensorflow
+# https://www.kaggle.com/code/abhijeetbhilare/food-classification-using-resnet
+# https://www.kaggle.com/code/niharika41298/food-nutrition-analysis-eda
+# https://www.kaggle.com/code/artgor/food-recognition-challenge-eda
+# https://www.kaggle.com/datasets/kmader/food41
 # https://keras.io/api/applications/
 
 import os
@@ -13,9 +19,15 @@ from keras.layers import BatchNormalization
 from keras.layers import GlobalAveragePooling2D
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau
+from keras.callbacks import ModelCheckpoint
 from keras.callbacks import EarlyStopping
+from keras.callbacks import CSVLogger
 from keras.applications import ResNet50V2
 from keras.applications import MobileNetV2
+from keras.applications import InceptionV3
+from keras.applications import EfficientNetB0
+from keras.regularizers import l2
+from keras.optimizers import Adam
 
 
 DATASET_DIRS = glob.glob("dataset/*")
@@ -27,7 +39,10 @@ VAL_DIRS = glob.glob("dataset/val/*")
 TEST_DIRS = glob.glob("dataset/test/*")
 
 BATCH_SIZE = 32
-MODEL_PATH = "ResNet50V2.h5"  # ResNet50V2.h5, MobileNetV2.h5
+MODEL = "EfficientNetB0.h5"  # ResNet50V2.h5, MobileNetV2.h5, InceptionV3.h5, EfficientNetB0.h5
+CHECKPOINT_PATH = "checkpoints/" + MODEL
+MODEL_PATH = "models/" + MODEL
+LOG_PATH = "logs/" + MODEL
 
 
 def show_food(name):
@@ -48,8 +63,8 @@ def show_food(name):
 def run_data_augmentation():
     img_datagen = ImageDataGenerator(
         rescale=1 / 255,
-        shear_range=10,
-        zoom_range=0.3,
+        shear_range=0.2,
+        zoom_range=0.2,
         horizontal_flip=True,
         vertical_flip=True,
         brightness_range=[0.5, 2.0],
@@ -66,7 +81,7 @@ def run_data_augmentation():
 
 
 def compile_model():
-    net = ResNet50V2(
+    net = EfficientNetB0(
         weights="imagenet",
         include_top=False,
     )
@@ -74,24 +89,27 @@ def compile_model():
         layer.trainable = False
     x = net.output
     x = GlobalAveragePooling2D()(x)
-    x = Dropout(0.2)(x)
     x = Dense(256, activation="relu")(x)
+    x = Dropout(0.2)(x)
     x = BatchNormalization()(x)
-    predictions = Dense(len(TRAIN_DIRS), activation="softmax")(x)
+    predictions = Dense(len(TRAIN_DIRS), kernel_regularizer=l2(0.005), activation="softmax")(x)
     model = Model(inputs=net.input, outputs=predictions)
     early_stopping = EarlyStopping(monitor="val_accuracy", mode="max", patience=10, restore_best_weights=True)
+    checkpoint = ModelCheckpoint(CHECKPOINT_PATH, monitor="val_accuracy", save_best_only=True, verbose=1)
     lr = ReduceLROnPlateau(monitor="val_accuracy", mode="max", patience=10)
-    model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+    csv_logger = CSVLogger(LOG_PATH)
+    optimizer = Adam(lr=0.00001)
+    model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
     print(model.summary())
-    return model, early_stopping, lr
+    return model, early_stopping, checkpoint, lr, csv_logger
 
 
 def train():
     train_data, val_data, test_data = run_data_augmentation()
-    model, early_stopping, lr = compile_model()
-    history = model.fit(train_data, epochs=100,
+    model, early_stopping, checkpoint, lr, csv_logger = compile_model()
+    history = model.fit(train_data, epochs=200,
                         validation_data=val_data,
-                        callbacks=[early_stopping, lr],
+                        callbacks=[early_stopping, checkpoint, lr, csv_logger],
                         batch_size=BATCH_SIZE)
 
     train_score = model.evaluate(train_data)

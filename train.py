@@ -24,12 +24,12 @@ from keras.callbacks import ReduceLROnPlateau
 from keras.callbacks import ModelCheckpoint
 from keras.callbacks import EarlyStopping
 from keras.callbacks import CSVLogger
+from keras.applications import Xception
 from keras.applications import ResNet50V2
 from keras.applications import MobileNetV2
 from keras.applications import InceptionV3
 from keras.applications import DenseNet121
-from keras.applications import EfficientNetB0
-from keras.applications import EfficientNetB4
+from keras.applications import DenseNet201
 from keras.optimizers import Adam
 
 
@@ -42,7 +42,7 @@ VAL_DIRS = glob.glob("dataset/val/*")
 TEST_DIRS = glob.glob("dataset/test/*")
 
 BATCH_SIZE = 32
-MODEL = "EfficientNetB4"
+MODEL = "DenseNet201"
 CHECKPOINT_PATH = "checkpoints/" + MODEL + ".h5"
 FIGURE_PATH = "figures/" + MODEL + ".png"
 MODEL_PATH = "models/" + MODEL + ".h5"
@@ -98,7 +98,7 @@ def acc_top5(y_true, y_pred):
 
 
 def compile_model():
-    net = EfficientNetB4(
+    net = DenseNet201(
         weights="imagenet",
         include_top=False,
     )

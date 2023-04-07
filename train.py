@@ -1,6 +1,7 @@
-# https://www.kaggle.com/code/karan842/pneumonia-detection-transfer-learning-94-acc
 # https://www.kaggle.com/code/elcaiseri/mnist-simple-cnn-keras-accuracy-0-99-top-1#4.-Evaluate-the-model
+# https://github.com/106368015AlvinYang/Taiwanese-Food-101/blob/master/Taiwanese-Food-101.ipynb
 # https://www.kaggle.com/code/theimgclist/multiclass-food-classification-using-tensorflow
+# https://www.kaggle.com/code/karan842/pneumonia-detection-transfer-learning-94-acc
 # https://www.kaggle.com/code/theeyeschico/food-classification-using-tensorflow
 # https://www.kaggle.com/code/abhijeetbhilare/food-classification-using-resnet
 # https://www.kaggle.com/code/niharika41298/food-nutrition-analysis-eda
@@ -17,6 +18,7 @@ from keras.layers import Dense
 from keras.layers import Dropout
 from keras.layers import BatchNormalization
 from keras.layers import GlobalAveragePooling2D
+from keras.metrics import top_k_categorical_accuracy
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau
 from keras.callbacks import ModelCheckpoint
@@ -25,7 +27,9 @@ from keras.callbacks import CSVLogger
 from keras.applications import ResNet50V2
 from keras.applications import MobileNetV2
 from keras.applications import InceptionV3
+from keras.applications import DenseNet121
 from keras.applications import EfficientNetB0
+from keras.applications import EfficientNetB4
 from keras.optimizers import Adam
 
 
@@ -38,10 +42,11 @@ VAL_DIRS = glob.glob("dataset/val/*")
 TEST_DIRS = glob.glob("dataset/test/*")
 
 BATCH_SIZE = 32
-MODEL = "MobileNetV2.h5"  # ResNet50V2.h5, MobileNetV2.h5, InceptionV3.h5, EfficientNetB0.h5
-CHECKPOINT_PATH = "checkpoints/" + MODEL
-MODEL_PATH = "models/" + MODEL
-LOG_PATH = "logs/" + MODEL
+MODEL = "EfficientNetB4"
+CHECKPOINT_PATH = "checkpoints/" + MODEL + ".h5"
+FIGURE_PATH = "figures/" + MODEL + ".png"
+MODEL_PATH = "models/" + MODEL + ".h5"
+LOG_PATH = "logs/" + MODEL + ".log"
 
 
 def show_food(name):
@@ -73,14 +78,27 @@ def run_data_augmentation():
         fill_mode="nearest"
     )
     val_test_datagen = ImageDataGenerator(rescale=1 / 255)
-    train_data = img_datagen.flow_from_directory(TRAIN_PATH, batch_size=BATCH_SIZE, class_mode="categorical")
-    val_data = val_test_datagen.flow_from_directory(VAL_PATH, batch_size=BATCH_SIZE, class_mode="categorical")
-    test_data = val_test_datagen.flow_from_directory(TEST_PATH, batch_size=BATCH_SIZE, class_mode="categorical")
+    train_data = img_datagen.flow_from_directory(TRAIN_PATH,
+                                                 batch_size=BATCH_SIZE,
+                                                 target_size=(512, 512),
+                                                 class_mode="categorical")
+    val_data = val_test_datagen.flow_from_directory(VAL_PATH,
+                                                    batch_size=BATCH_SIZE,
+                                                    target_size=(512, 512),
+                                                    class_mode="categorical")
+    test_data = val_test_datagen.flow_from_directory(TEST_PATH,
+                                                     batch_size=BATCH_SIZE,
+                                                     target_size=(512, 512),
+                                                     class_mode="categorical")
     return train_data, val_data, test_data
 
 
+def acc_top5(y_true, y_pred):
+    return top_k_categorical_accuracy(y_true, y_pred, k=5)
+
+
 def compile_model():
-    net = MobileNetV2(
+    net = EfficientNetB4(
         weights="imagenet",
         include_top=False,
     )
@@ -88,20 +106,24 @@ def compile_model():
         layer.trainable = False
     x = net.output
     x = GlobalAveragePooling2D()(x)
-    x = Dense(256, activation="relu")(x)
+    x = Dense(4096, activation="relu")(x)
     x = Dropout(0.2)(x)
     x = BatchNormalization()(x)
-    x = Dense(256, activation="relu")(x)
+    x = Dense(4096, activation="relu")(x)
+    x = Dropout(0.2)(x)
+    x = BatchNormalization()(x)
+    x = Dense(4096, activation="relu")(x)
     x = Dropout(0.2)(x)
     x = BatchNormalization()(x)
     predictions = Dense(len(TRAIN_DIRS), activation="softmax")(x)
     model = Model(inputs=net.input, outputs=predictions)
     early_stopping = EarlyStopping(monitor="val_accuracy", mode="max", patience=10, restore_best_weights=True)
-    checkpoint = ModelCheckpoint(CHECKPOINT_PATH, monitor="val_accuracy", save_best_only=True, verbose=1)
+    checkpoint = ModelCheckpoint(CHECKPOINT_PATH, monitor="val_accuracy", save_best_only=True,
+                                 verbose=1, save_weights_only=False)
     lr = ReduceLROnPlateau(monitor="val_accuracy", mode="max", patience=10)
     csv_logger = CSVLogger(LOG_PATH)
-    optimizer = Adam(learning_rate=0.0001)
-    model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
+    optimizer = Adam(learning_rate=0.00001)
+    model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy", acc_top5])
     print(model.summary())
     return model, early_stopping, checkpoint, lr, csv_logger
 
@@ -122,7 +144,7 @@ def train():
     print("Test Loss: ", test_score[0])
     print("Test Accuracy: ", test_score[1])
 
-    model.save_weights(MODEL_PATH)
+    model.save(MODEL_PATH)
 
     plt.figure(figsize=(12, 8))
     plt.title("EVALUATION")
@@ -136,7 +158,8 @@ def train():
     plt.plot(history.history["val_accuracy"], label="Val_Accuracy")
     plt.legend()
     plt.title("Accuracy Evolution")
-    plt.show()
+    # plt.show()
+    plt.savefig(FIGURE_PATH)
 
 
 if __name__ == '__main__':

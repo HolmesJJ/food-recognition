@@ -14,6 +14,7 @@ import glob
 import matplotlib.pyplot as plt
 
 from keras.models import Model
+from keras.models import load_model
 from keras.layers import Dense
 from keras.layers import Dropout
 from keras.layers import BatchNormalization
@@ -24,12 +25,12 @@ from keras.callbacks import ReduceLROnPlateau
 from keras.callbacks import ModelCheckpoint
 from keras.callbacks import EarlyStopping
 from keras.callbacks import CSVLogger
-from keras.applications import Xception
 from keras.applications import ResNet50V2
 from keras.applications import MobileNetV2
 from keras.applications import InceptionV3
 from keras.applications import DenseNet121
-from keras.applications import DenseNet201
+from keras.applications import EfficientNetB0
+from keras.applications import EfficientNetB4
 from keras.optimizers import Adam
 
 
@@ -42,7 +43,7 @@ VAL_DIRS = glob.glob("dataset/val/*")
 TEST_DIRS = glob.glob("dataset/test/*")
 
 BATCH_SIZE = 32
-MODEL = "DenseNet201"
+MODEL = "DenseNet121"
 CHECKPOINT_PATH = "checkpoints/" + MODEL + ".h5"
 FIGURE_PATH = "figures/" + MODEL + ".png"
 MODEL_PATH = "models/" + MODEL + ".h5"
@@ -98,32 +99,36 @@ def acc_top5(y_true, y_pred):
 
 
 def compile_model():
-    net = DenseNet201(
-        weights="imagenet",
-        include_top=False,
-    )
-    for layer in net.layers:
-        layer.trainable = False
-    x = net.output
-    x = GlobalAveragePooling2D()(x)
-    x = Dense(4096, activation="relu")(x)
-    x = Dropout(0.2)(x)
-    x = BatchNormalization()(x)
-    x = Dense(4096, activation="relu")(x)
-    x = Dropout(0.2)(x)
-    x = BatchNormalization()(x)
-    x = Dense(4096, activation="relu")(x)
-    x = Dropout(0.2)(x)
-    x = BatchNormalization()(x)
-    predictions = Dense(len(TRAIN_DIRS), activation="softmax")(x)
-    model = Model(inputs=net.input, outputs=predictions)
+    if not os.path.exists(CHECKPOINT_PATH):
+        net = DenseNet121(
+            weights="imagenet",
+            include_top=False,
+        )
+        for layer in net.layers:
+            layer.trainable = False
+        x = net.output
+        x = GlobalAveragePooling2D()(x)
+        x = Dense(4096, activation="relu")(x)
+        x = Dropout(0.2)(x)
+        x = BatchNormalization()(x)
+        x = Dense(4096, activation="relu")(x)
+        x = Dropout(0.2)(x)
+        x = BatchNormalization()(x)
+        x = Dense(4096, activation="relu")(x)
+        x = Dropout(0.2)(x)
+        x = BatchNormalization()(x)
+        predictions = Dense(len(TRAIN_DIRS), activation="softmax")(x)
+        model = Model(inputs=net.input, outputs=predictions)
+        optimizer = Adam(learning_rate=0.00001)
+        model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy", acc_top5])
+    else:
+        model = load_model(CHECKPOINT_PATH, custom_objects={"acc_top5": acc_top5})
+        print("Checkpoint Model Loaded")
     early_stopping = EarlyStopping(monitor="val_accuracy", mode="max", patience=10, restore_best_weights=True)
     checkpoint = ModelCheckpoint(CHECKPOINT_PATH, monitor="val_accuracy", save_best_only=True,
                                  verbose=1, save_weights_only=False)
     lr = ReduceLROnPlateau(monitor="val_accuracy", mode="max", patience=10)
     csv_logger = CSVLogger(LOG_PATH)
-    optimizer = Adam(learning_rate=0.00001)
-    model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy", acc_top5])
     print(model.summary())
     return model, early_stopping, checkpoint, lr, csv_logger
 
@@ -152,12 +157,12 @@ def train():
     plt.plot(history.history["loss"], label="Loss")
     plt.plot(history.history["val_loss"], label="Val_Loss")
     plt.legend()
-    plt.title("Loss Evolution")
+    plt.title("Loss Evaluation")
     plt.subplot(2, 2, 2)
     plt.plot(history.history["accuracy"], label="Accuracy")
     plt.plot(history.history["val_accuracy"], label="Val_Accuracy")
     plt.legend()
-    plt.title("Accuracy Evolution")
+    plt.title("Accuracy Evaluation")
     # plt.show()
     plt.savefig(FIGURE_PATH)
 

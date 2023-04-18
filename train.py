@@ -25,12 +25,12 @@ from keras.callbacks import ReduceLROnPlateau
 from keras.callbacks import ModelCheckpoint
 from keras.callbacks import EarlyStopping
 from keras.callbacks import CSVLogger
+from keras.applications import Xception
 from keras.applications import ResNet50V2
 from keras.applications import MobileNetV2
 from keras.applications import InceptionV3
 from keras.applications import DenseNet121
-from keras.applications import EfficientNetB0
-from keras.applications import EfficientNetB4
+from keras.applications import DenseNet201
 from keras.optimizers import Adam
 
 

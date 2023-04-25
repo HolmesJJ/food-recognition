@@ -3,7 +3,7 @@ import glob
 import random
 import shutil
 
-RAW_DATA_DIRS = glob.glob("foodsg-5/*")
+RAW_DATA_DIRS = glob.glob("foodsg-233/*")
 DATASET_PATH = "dataset/"
 TRAIN_RATIO = 0.8
 VAL_RATIO = 0.15

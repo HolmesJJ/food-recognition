@@ -80,15 +80,18 @@ def run_data_augmentation():
     )
     val_test_datagen = ImageDataGenerator(rescale=1 / 255)
     train_data = img_datagen.flow_from_directory(TRAIN_PATH,
+                                                 shuffle=True,
                                                  batch_size=BATCH_SIZE,
                                                  target_size=(512, 512),
                                                  class_mode="categorical")
     val_data = val_test_datagen.flow_from_directory(VAL_PATH,
-                                                    batch_size=BATCH_SIZE,
+                                                    batch_size=1,
+                                                    shuffle=False,
                                                     target_size=(512, 512),
                                                     class_mode="categorical")
     test_data = val_test_datagen.flow_from_directory(TEST_PATH,
-                                                     batch_size=BATCH_SIZE,
+                                                     batch_size=1,
+                                                     shuffle=False,
                                                      target_size=(512, 512),
                                                      class_mode="categorical")
     return train_data, val_data, test_data
@@ -145,6 +148,10 @@ def train():
     print("Train Loss: ", train_score[0])
     print("Train Accuracy: ", train_score[1])
 
+    val_score = model.evaluate(val_data)
+    print("Validation Loss: ", val_score[0])
+    print("Validation Accuracy: ", val_score[1])
+
     test_score = model.evaluate(test_data)
     print("Test Loss: ", test_score[0])
     print("Test Accuracy: ", test_score[1])
@@ -169,4 +176,5 @@ def train():
 
 if __name__ == '__main__':
     # show_food("Apple")
+    # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
     train()

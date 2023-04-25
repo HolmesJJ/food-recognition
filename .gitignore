@@ -12,7 +12,8 @@ cache/
 mlruns/
 
 # data
-dataset/
-foodsg-5/
 foodsg-233/
+foodsg-233*.zip
+dataset*.zip
+dataset/
 *.h5

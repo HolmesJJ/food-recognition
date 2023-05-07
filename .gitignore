@@ -15,4 +15,6 @@ foodsg-233/
 foodsg-233*.zip
 dataset*.zip
 dataset/
+
+# models
 *.h5

@@ -3,6 +3,7 @@ import glob
 import random
 import shutil
 
+
 RAW_DATA_DIRS = glob.glob("foodsg-233/*")
 DATASET_PATH = "dataset/"
 TRAIN_RATIO = 0.8
@@ -38,6 +39,6 @@ def create_dataset():
                             os.path.basename(food[idx]))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if not os.path.isdir(DATASET_PATH):
         create_dataset()

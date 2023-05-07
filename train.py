@@ -174,7 +174,7 @@ def train():
     plt.savefig(FIGURE_PATH)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # show_food("Apple")
     # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
     train()

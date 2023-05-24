@@ -8,3 +8,14 @@
 | tw-food-101 | [Xception](https://drive.google.com/file/d/1ekOl6HT8jjl2FQJ2SvZEw06XGyhXlPj9/view?usp=share_link) | 79.41% | 95.27% |
 | tw-food-101 | [DenseNet201](https://drive.google.com/file/d/1MRywupyObsFS5J_KTQEFUzoFGKwsfgzV/view?usp=share_link) | 80.61% | 94.53% |
 | food-101 | [DenseNet201](https://drive.google.com/file/d/1FKUluEpOQE4Vk32JoreB5O8c9jH9Tm92/view?usp=share_link) | 70.99% | 90.34% |
+
+### Categories need to remove or not exist in empower dataset
+
+* CNY love letter
+* Sweets
+* bakso
+* begedil
+* chawanmushi
+* pitaya
+* tumpeng
+* buckwheat

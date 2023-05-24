@@ -1,3 +1,4 @@
+# https://towardsdatascience.com/cifar-100-transfer-learning-using-efficientnet-ed3ed7b89af2
 # https://www.kaggle.com/code/elcaiseri/mnist-simple-cnn-keras-accuracy-0-99-top-1#4.-Evaluate-the-model
 # https://github.com/106368015AlvinYang/Taiwanese-Food-101/blob/master/Taiwanese-Food-101.ipynb
 # https://www.kaggle.com/code/theimgclist/multiclass-food-classification-using-tensorflow
@@ -11,6 +12,7 @@
 
 import os
 import glob
+import math
 import matplotlib.pyplot as plt
 
 from keras.models import Model
@@ -32,6 +34,9 @@ from keras.applications import InceptionV3
 from keras.applications import DenseNet121
 from keras.applications import DenseNet201
 from keras.optimizers import Adam
+# https://github.com/keras-team/keras/issues/17199
+# from keras.applications import EfficientNetB3 have bugs
+from networks.efficientnet import EfficientNetB3
 
 
 DATASET_DIRS = glob.glob("dataset/*")
@@ -43,6 +48,7 @@ VAL_DIRS = glob.glob("dataset/val/*")
 TEST_DIRS = glob.glob("dataset/test/*")
 
 BATCH_SIZE = 32
+IMAGE_SIZE = 512
 MODEL = "DenseNet121"
 CHECKPOINT_PATH = "checkpoints/" + MODEL + ".h5"
 FIGURE_PATH = "figures/" + MODEL + ".png"
@@ -66,8 +72,8 @@ def show_food(name):
 
 
 def run_data_augmentation():
-    img_datagen = ImageDataGenerator(
-        rescale=1 / 255,
+    train_datagen = ImageDataGenerator(
+        rescale=1/255,
         shear_range=0.2,
         zoom_range=0.2,
         horizontal_flip=True,
@@ -78,21 +84,21 @@ def run_data_augmentation():
         rotation_range=20,
         fill_mode="nearest"
     )
-    val_test_datagen = ImageDataGenerator(rescale=1 / 255)
-    train_data = img_datagen.flow_from_directory(TRAIN_PATH,
-                                                 shuffle=True,
-                                                 batch_size=BATCH_SIZE,
-                                                 target_size=(512, 512),
-                                                 class_mode="categorical")
+    val_test_datagen = ImageDataGenerator(rescale=1/255)
+    train_data = train_datagen.flow_from_directory(TRAIN_PATH,
+                                                   shuffle=True,
+                                                   batch_size=BATCH_SIZE,
+                                                   target_size=(IMAGE_SIZE, IMAGE_SIZE),
+                                                   class_mode="categorical")
     val_data = val_test_datagen.flow_from_directory(VAL_PATH,
                                                     batch_size=1,
                                                     shuffle=False,
-                                                    target_size=(512, 512),
+                                                    target_size=(IMAGE_SIZE, IMAGE_SIZE),
                                                     class_mode="categorical")
     test_data = val_test_datagen.flow_from_directory(TEST_PATH,
                                                      batch_size=1,
                                                      shuffle=False,
-                                                     target_size=(512, 512),
+                                                     target_size=(IMAGE_SIZE, IMAGE_SIZE),
                                                      class_mode="categorical")
     return train_data, val_data, test_data
 
@@ -104,8 +110,10 @@ def acc_top5(y_true, y_pred):
 def compile_model():
     if not os.path.exists(CHECKPOINT_PATH):
         net = DenseNet121(
+            input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3),
             weights="imagenet",
             include_top=False,
+            # classes=len(TRAIN_DIRS)
         )
         for layer in net.layers:
             layer.trainable = False
@@ -122,15 +130,15 @@ def compile_model():
         x = BatchNormalization()(x)
         predictions = Dense(len(TRAIN_DIRS), activation="softmax")(x)
         model = Model(inputs=net.input, outputs=predictions)
-        optimizer = Adam(learning_rate=0.00001)
+        optimizer = Adam(learning_rate=1e-5)
         model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy", acc_top5])
     else:
         model = load_model(CHECKPOINT_PATH, custom_objects={"acc_top5": acc_top5})
         print("Checkpoint Model Loaded")
-    early_stopping = EarlyStopping(monitor="val_accuracy", mode="max", patience=10, restore_best_weights=True)
+    early_stopping = EarlyStopping(monitor="val_loss", mode="min", patience=10, restore_best_weights=True)
     checkpoint = ModelCheckpoint(CHECKPOINT_PATH, monitor="val_accuracy", save_best_only=True,
                                  verbose=1, save_weights_only=False)
-    lr = ReduceLROnPlateau(monitor="val_accuracy", mode="max", patience=10)
+    lr = ReduceLROnPlateau(monitor="val_loss", mode="min", min_lr=1e-7, patience=10)
     csv_logger = CSVLogger(LOG_PATH)
     print(model.summary())
     return model, early_stopping, checkpoint, lr, csv_logger
@@ -142,9 +150,12 @@ def train():
     history = model.fit(train_data, epochs=300,
                         validation_data=val_data,
                         callbacks=[early_stopping, checkpoint, lr, csv_logger],
-                        batch_size=BATCH_SIZE)
+                        steps_per_epoch=math.ceil(train_data.samples / BATCH_SIZE),
+                        batch_size=BATCH_SIZE,
+                        validation_steps=math.ceil(val_data.samples / BATCH_SIZE),
+                        validation_batch_size=BATCH_SIZE)
 
-    train_score = model.evaluate(train_data)
+    train_score = model.evaluate(train_data, batch_size=BATCH_SIZE, step=math.ceil(train_data.samples / BATCH_SIZE))
     print("Train Loss: ", train_score[0])
     print("Train Accuracy: ", train_score[1])
 

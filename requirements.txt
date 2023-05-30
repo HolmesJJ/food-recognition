@@ -2,7 +2,11 @@ tqdm
 keras
 numpy
 scipy
+docker
+grpcio
 pandas
 seaborn
 matplotlib
 tensorflow
+grpcio-tools
+opencv-python

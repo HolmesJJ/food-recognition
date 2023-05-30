@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+service PredictionService {
+    rpc predict (PredictionRequest) returns (PredictionResponse) {}
+}
+
+message PredictionRequest {
+    bytes image = 1;
+    string shape = 2;
+    int32 top_n = 3;
+}
+
+message PredictionResponse {
+    string message = 1;
+}

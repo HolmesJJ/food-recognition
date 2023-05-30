@@ -155,7 +155,7 @@ def train():
                         validation_steps=math.ceil(val_data.samples / BATCH_SIZE),
                         validation_batch_size=BATCH_SIZE)
 
-    train_score = model.evaluate(train_data, batch_size=BATCH_SIZE, step=math.ceil(train_data.samples / BATCH_SIZE))
+    train_score = model.evaluate(train_data, batch_size=BATCH_SIZE, steps=math.ceil(train_data.samples / BATCH_SIZE))
     print("Train Loss: ", train_score[0])
     print("Train Accuracy: ", train_score[1])
 

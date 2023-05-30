@@ -9,7 +9,14 @@
 | tw-food-101 | [DenseNet201](https://drive.google.com/file/d/1MRywupyObsFS5J_KTQEFUzoFGKwsfgzV/view?usp=share_link) | 80.61% | 94.53% |
 | food-101 | [DenseNet201](https://drive.google.com/file/d/1FKUluEpOQE4Vk32JoreB5O8c9jH9Tm92/view?usp=share_link) | 70.99% | 90.34% |
 
-### Categories need to remove or not exist in empower dataset
+## Deploy Docker
+
+```
+docker build --no-cache -t food-recognition:v1.0 .
+docker save -o food-recognition-v1.0.tar food-recognition:v1.0
+```
+
+## Categories need to remove or not exist in empower dataset
 
 * CNY love letter
 * Sweets

@@ -14,6 +14,7 @@
 ```
 docker build --no-cache -t food-recognition:v1.0 .
 docker save -o food-recognition-v1.0.tar food-recognition:v1.0
+docker load -i food-recognition-v1.0.tar
 ```
 
 ## Categories need to remove or not exist in empower dataset

@@ -33,6 +33,9 @@ from keras.applications import MobileNetV2
 from keras.applications import InceptionV3
 from keras.applications import DenseNet121
 from keras.applications import DenseNet201
+from keras.applications import ResNet152V2
+from keras.applications import InceptionResNetV2
+
 from keras.optimizers import Adam
 # https://github.com/keras-team/keras/issues/17199
 # from keras.applications import EfficientNetB3 have bugs
@@ -135,10 +138,10 @@ def compile_model():
     else:
         model = load_model(CHECKPOINT_PATH, custom_objects={"acc_top5": acc_top5})
         print("Checkpoint Model Loaded")
-    early_stopping = EarlyStopping(monitor="val_loss", mode="min", patience=10, restore_best_weights=True)
+    early_stopping = EarlyStopping(monitor="val_accuracy", mode="max", patience=10, restore_best_weights=True)
     checkpoint = ModelCheckpoint(CHECKPOINT_PATH, monitor="val_accuracy", save_best_only=True,
                                  verbose=1, save_weights_only=False)
-    lr = ReduceLROnPlateau(monitor="val_loss", mode="min", min_lr=1e-7, patience=10)
+    lr = ReduceLROnPlateau(monitor="val_accuracy", mode="max", min_lr=1e-7, patience=10)
     csv_logger = CSVLogger(LOG_PATH)
     print(model.summary())
     return model, early_stopping, checkpoint, lr, csv_logger

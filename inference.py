@@ -27,13 +27,17 @@ def load_models():
     matches = pd.read_csv(MATCHES_PATH)
     matches["empower_food_names"] = matches["empower_food_names"].apply(json.loads)
     matches["empower_food_alt_names"] = matches["empower_food_alt_names"].apply(json.loads)
+    matches["empower_categories"] = matches["empower_categories"].apply(json.loads)
+    matches["empower_subcategories"] = matches["empower_subcategories"].apply(json.loads)
     empower_food_names = matches.set_index("food_sg_233")["empower_food_names"].to_dict()
     empower_food_alt_names = matches.set_index("food_sg_233")["empower_food_alt_names"].to_dict()
+    empower_categories = matches.set_index("food_sg_233")["empower_categories"].to_dict()
+    empower_subcategories = matches.set_index("food_sg_233")["empower_subcategories"].to_dict()
     models = []
     for CHECKPOINT_PATH in CHECKPOINT_PATHS:
         models.append(load_model(CHECKPOINT_PATH, custom_objects={"acc_top5": acc_top5}))
     print("Models Loaded")
-    return categories, empower_food_names, empower_food_alt_names, models
+    return categories, (empower_food_names, empower_food_alt_names, empower_categories, empower_subcategories), models
 
 
 def predict(model, filepath, top_n=1):
@@ -47,8 +51,9 @@ def predict(model, filepath, top_n=1):
     return predicted_label, predicted_score
 
 
-def ensemble_predict(categories, empower_food_names, empower_food_alt_names, models, filepath,
-                     top_n_predictions=1, top_n_matches=1):
+def ensemble_predict(categories, empowers, models, filepath, top_n_predictions=1, top_n_matches=1):
+    empower_food_names, empower_food_alt_names, empower_categories, empower_subcategories = empowers
+    print()
     predicted_labels = []
     predicted_scores = []
     predictions = {}
@@ -65,10 +70,11 @@ def ensemble_predict(categories, empower_food_names, empower_food_alt_names, mod
     predictions = dict(sorted(predictions.items(), key=lambda item: item[1], reverse=True)[:top_n_predictions])
     matched_predictions = {}
     for key in predictions:
-        matches = empower_food_names[key] + empower_food_alt_names[key]
-        matches = sorted(matches, key=lambda item: (-item["similarity"], item["id"], item["name"]))
+        matches = empower_food_names[key] + empower_food_alt_names[key] + empower_categories[key] + empower_subcategories[key]
+        matches = sorted(matches, key=lambda item: (-item["similarity"], item["_id"], item["name"]))
         unique_ids = set()
-        matches = [item for item in matches if item["id"] not in unique_ids and not unique_ids.add(item["id"])]
+        matches = [item for item in matches if item["_id"] not in unique_ids and not unique_ids.add(item["_id"])]
+        matches = [{k: v for k, v in item.items() if k != "similarity"} for item in matches]
         prediction = {
             "accuracy": predictions[key],
             "matches": matches[:top_n_matches]
@@ -78,6 +84,6 @@ def ensemble_predict(categories, empower_food_names, empower_food_alt_names, mod
 
 
 if __name__ == "__main__":
-    cats, names, alt_names, mods = load_models()
-    p = ensemble_predict(cats, names, alt_names, mods, "food/test1.png", top_n_predictions=5, top_n_matches=5)
+    cats, eps, mods = load_models()
+    p = ensemble_predict(cats, eps, mods, "food/test1.png", top_n_predictions=5, top_n_matches=5)
     print(p)

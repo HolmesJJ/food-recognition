@@ -51,7 +51,7 @@ def predict(model, filepath, top_n=1):
     return predicted_label, predicted_score
 
 
-def ensemble_predict(categories, empowers, models, filepath, top_n_predictions=1, top_n_matches=1):
+def ensemble_predict(categories, empowers, models, filepath, top_n_predictions=1, top_n_matches=1, similarity=False):
     empower_food_names, empower_food_alt_names, empower_categories, empower_subcategories = empowers
     print()
     predicted_labels = []
@@ -74,7 +74,8 @@ def ensemble_predict(categories, empowers, models, filepath, top_n_predictions=1
         matches = sorted(matches, key=lambda item: (-item["similarity"], item["_id"], item["name"]))
         unique_ids = set()
         matches = [item for item in matches if item["_id"] not in unique_ids and not unique_ids.add(item["_id"])]
-        matches = [{k: v for k, v in item.items() if k != "similarity"} for item in matches]
+        if not similarity:
+            matches = [{k: v for k, v in item.items() if k != "similarity"} for item in matches]
         prediction = {
             "accuracy": predictions[key],
             "matches": matches[:top_n_matches]
@@ -85,5 +86,5 @@ def ensemble_predict(categories, empowers, models, filepath, top_n_predictions=1
 
 if __name__ == "__main__":
     cats, eps, mods = load_models()
-    p = ensemble_predict(cats, eps, mods, "food/test1.png", top_n_predictions=5, top_n_matches=5)
+    p = ensemble_predict(cats, eps, mods, "food/test1.png", top_n_predictions=1, top_n_matches=5, similarity=False)
     print(p)

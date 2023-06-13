@@ -1,4 +1,6 @@
+import io
 import json
+import base64
 import numpy as np
 import pandas as pd
 
@@ -11,11 +13,18 @@ from keras.metrics import top_k_categorical_accuracy
 CATEGORIES_PATH = "categories.csv"
 MATCHES_PATH = "food-sg-233-empower-food-matched.csv"
 
-MODELS = ["sg-food-233-densenet121", "sg-food-233-densenet201", "sg-food-233-xception"]
+MODELS = ["sg-food-233-xception", "sg-food-233-densenet121", "sg-food-233-densenet201",
+          "sg-food-233-resnet152v2", "sg-food-233-inceptionv3", "sg-food-233-inceptionresnetv2"]
 CHECKPOINT_PATHS = ["checkpoints/" + MODEL + ".h5" for MODEL in MODELS]
 
 IMAGE_SIZE = 512
 TOP_N = 5
+
+
+def filepath_to_base64(filepath):
+    with open(filepath, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
+    return encoded_string
 
 
 def acc_top5(y_true, y_pred):
@@ -40,36 +49,44 @@ def load_models():
     return categories, (empower_food_names, empower_food_alt_names, empower_categories, empower_subcategories), models
 
 
-def predict(model, filepath, top_n=1):
-    test_image = load_img(filepath, target_size=(IMAGE_SIZE, IMAGE_SIZE))
+def predict(model, filepath=None, encoded_string=None, top_n=None):
+    assert filepath or encoded_string
+    if filepath:
+        test_image = load_img(filepath, target_size=(IMAGE_SIZE, IMAGE_SIZE))
+    else:
+        image_bytes = base64.b64decode(encoded_string)
+        image_file = io.BytesIO(image_bytes)
+        test_image = load_img(image_file, target_size=(IMAGE_SIZE, IMAGE_SIZE))
     test_image_array = img_to_array(test_image)
     test_image_array = np.expand_dims(test_image_array, axis=0)
     test_image_array = test_image_array / 255.
     prediction = model.predict(test_image_array, verbose=0)
-    predicted_label = np.argsort(prediction[0])[::-1][:top_n]
+    if top_n:
+        predicted_label = np.argsort(prediction[0])[::-1][:top_n]
+    else:
+        predicted_label = np.argsort(prediction[0])[::-1]
     predicted_score = prediction[0][predicted_label]
     return predicted_label, predicted_score
 
 
-def ensemble_predict(categories, empowers, models, filepath,
-                     top_n_predictions=1, top_n_matches=1,
+def ensemble_predict(categories, empowers, models, filepath=None, encoded_string=None,
+                     top_n_predictions=None, top_n_matches=None,
                      name=False, similarity=False):
+    assert filepath or encoded_string
     empower_food_names, empower_food_alt_names, empower_categories, empower_subcategories = empowers
-    print()
-    predicted_labels = []
-    predicted_scores = []
     predictions = {}
     for model in models:
-        predicted_label, predicted_score = predict(model, filepath, top_n_predictions)
-        predicted_labels = predicted_labels + list(predicted_label)
-        predicted_scores = predicted_scores + list(predicted_score)
+        predicted_labels, predicted_scores = predict(model, filepath, encoded_string)
         for i, label in enumerate(predicted_labels):
-            if predicted_labels[i] in predictions:
+            if categories[predicted_labels[i]] in predictions:
                 if predictions[categories[predicted_labels[i]]] < predicted_scores[i]:
                     predictions[categories[predicted_labels[i]]] = predicted_scores[i]
             else:
                 predictions[categories[predicted_labels[i]]] = predicted_scores[i]
-    predictions = dict(sorted(predictions.items(), key=lambda item: item[1], reverse=True)[:top_n_predictions])
+    if top_n_predictions:
+        predictions = dict(sorted(predictions.items(), key=lambda item: item[1], reverse=True)[:top_n_predictions])
+    else:
+        predictions = dict(sorted(predictions.items(), key=lambda item: item[1], reverse=True))
     matched_predictions = {}
     for key in predictions:
         matches = empower_food_names[key] + empower_food_alt_names[key] + empower_categories[key] + empower_subcategories[key]
@@ -82,7 +99,7 @@ def ensemble_predict(categories, empowers, models, filepath,
             matches = [{k: v for k, v in item.items() if k != "similarity"} for item in matches]
         prediction = {
             "accuracy": predictions[key],
-            "matches": matches[:top_n_matches]
+            "matches": matches[:top_n_matches] if top_n_matches else matches
         }
         matched_predictions[key] = prediction
     return matched_predictions
@@ -90,7 +107,8 @@ def ensemble_predict(categories, empowers, models, filepath,
 
 if __name__ == "__main__":
     cats, eps, mods = load_models()
-    p = ensemble_predict(cats, eps, mods, "food/test1.png",
+    es = filepath_to_base64("food/chicken rice.jpg")
+    p = ensemble_predict(cats, eps, mods, encoded_string=es,
                          top_n_predictions=1, top_n_matches=5,
                          name=False, similarity=False)
     print(p)

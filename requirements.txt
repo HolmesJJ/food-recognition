@@ -5,6 +5,7 @@ scipy
 docker
 grpcio
 pandas
+Pillow
 seaborn
 matplotlib
 tensorflow

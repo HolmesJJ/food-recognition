@@ -1,13 +1,14 @@
 tqdm
+Flask
 keras
 numpy
 scipy
 docker
-grpcio
 pandas
 Pillow
 seaborn
+Flask-Cors
 matplotlib
 tensorflow
-grpcio-tools
+flask_restful
 opencv-python

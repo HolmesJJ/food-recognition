@@ -13,6 +13,6 @@ RUN apt-get install -y ffmpeg libsm6 libxext6
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt --no-cache-dir
 
-EXPOSE 5000
+EXPOSE 5050
 
 CMD ["python", "server.py"]

@@ -819,9 +819,9 @@
 }
 ```
 
-### sushi.jpg
+### sushi.png
 
-<img src="sushi.jpg" style="width:800px;">
+<img src="sushi.png" style="width:800px;">
 
 ```json
 {

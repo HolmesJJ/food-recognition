@@ -935,3 +935,723 @@
    }
 }
 ```
+
+### sample1.1.jpg
+
+<img src="sample1.1.jpg" style="width:800px;">
+
+```json
+{
+   "dumpling":{
+      "accuracy":0.6789694,
+      "matches":[
+         {
+            "_id":"5ec758d7ec2d19094cf862f9"
+         }
+      ]
+   },
+   "chicken rice":{
+      "accuracy":0.6625852,
+      "matches":[
+         {
+            "_id":"5ec751c3ec2d19094cf862ae"
+         }
+      ]
+   },
+   "Porridge":{
+      "accuracy":0.5493644,
+      "matches":[
+         {
+            "_id":"5ec7908f2a0e1aaa65d6df10"
+         }
+      ]
+   },
+   "tutu kueh":{
+      "accuracy":0.41470048,
+      "matches":[
+         {
+            "_id":"5ec756c2ec2d19094cf862e3"
+         }
+      ]
+   },
+   "steamed grouper":{
+      "accuracy":0.39903462,
+      "matches":[
+         {
+            "_id":"5ec4f78bf0ab4835be506dad"
+         }
+      ]
+   }
+}
+```
+
+### sample2.1.jpg
+
+<img src="sample2.1.jpg" style="width:800px;">
+
+```json
+{
+   "Burger":{
+      "accuracy":0.9999069,
+      "matches":[
+         {
+            "_id":"5ec5553dc6cdad9b7b13efd6"
+         }
+      ]
+   },
+   "bak kwa":{
+      "accuracy":0.10303681,
+      "matches":[
+         {
+            "_id":"5ec6c64cbfe2612b26046177"
+         }
+      ]
+   },
+   "Rice, korean bulgogi beef":{
+      "accuracy":0.04594296,
+      "matches":[
+         {
+            "_id":"5ec50134f0ab4835be506dfb"
+         }
+      ]
+   },
+   "sambal":{
+      "accuracy":0.03636991,
+      "matches":[
+         {
+            "_id":"5ec6bee5379f63889728f88e"
+         }
+      ]
+   },
+   "chicken chop":{
+      "accuracy":0.019936698,
+      "matches":[
+         {
+            "_id":"5ec7503bec2d19094cf8629d"
+         }
+      ]
+   }
+}
+```
+
+### sample3.1.jpg
+
+<img src="sample3.1.jpg" style="width:800px;">
+
+```json
+{
+   "yuseng":{
+      "accuracy":0.53900987,
+      "matches":[
+         
+      ]
+   },
+   "ice kacang":{
+      "accuracy":0.21124926,
+      "matches":[
+         {
+            "_id":"5ec76210d5f0ee6256059fba"
+         }
+      ]
+   },
+   "popcorn":{
+      "accuracy":0.18818933,
+      "matches":[
+         {
+            "_id":"5ec78ed72a0e1aaa65d6defe"
+         }
+      ]
+   },
+   "muesli":{
+      "accuracy":0.17379779,
+      "matches":[
+         {
+            "_id":"5ec4fac2f0ab4835be506dc4"
+         }
+      ]
+   },
+   "vadai":{
+      "accuracy":0.16728257,
+      "matches":[
+         {
+            "_id":"5ec7bbcaa5d09c18c6fd9985"
+         }
+      ]
+   }
+}
+```
+
+### sample4.1.jpg
+
+<img src="sample4.1.jpg" style="width:800px;">
+
+```json
+ "mixed grills":{
+      "accuracy":0.6025791,
+      "matches":[
+         {
+            "_id":"5ec4f4b9f0ab4835be506d95"
+         }
+      ]
+   },
+   "Rice, chicken katsu with Japanese curry":{
+      "accuracy":0.544679,
+      "matches":[
+         {
+            "_id":"5ec50134f0ab4835be506dfb"
+         }
+      ]
+   },
+   "Nasi pattaya":{
+      "accuracy":0.37264058,
+      "matches":[
+         {
+            "_id":"5ec784612a0e1aaa65d6de8f"
+         }
+      ]
+   },
+   "Don, unagi":{
+      "accuracy":0.3427057,
+      "matches":[
+         {
+            "_id":"5ec762c4d5f0ee6256059fc1"
+         }
+      ]
+   },
+   "Snacks and Chips":{
+      "accuracy":0.29889336,
+      "matches":[
+         {
+            "_id":"5ec6c26305c4ac62011c2b23"
+         }
+      ]
+   }
+}
+```
+
+### sample5.1.jpg
+
+<img src="sample5.1.jpg" style="width:800px;">
+
+```json
+{
+   "chicken chop":{
+      "accuracy":0.8318809,
+      "matches":[
+         {
+            "_id":"5ec7503bec2d19094cf8629d"
+         }
+      ]
+   },
+   "mixed grills":{
+      "accuracy":0.17933856,
+      "matches":[
+         {
+            "_id":"5ec4f4b9f0ab4835be506d95"
+         }
+      ]
+   },
+   "Rice, chicken katsu with Japanese curry":{
+      "accuracy":0.16201657,
+      "matches":[
+         {
+            "_id":"5ec50134f0ab4835be506dfb"
+         }
+      ]
+   },
+   "fried fish":{
+      "accuracy":0.11162982,
+      "matches":[
+         {
+            "_id":"5ec5e3d8726fa8bbc1ad83fe"
+         }
+      ]
+   },
+   "Rice, with dakgalbi":{
+      "accuracy":0.10166486,
+      "matches":[
+         {
+            "_id":"5ec50134f0ab4835be506dfb"
+         }
+      ]
+   }
+}
+```
+
+### sample6.1.jpg
+
+<img src="sample6.1.jpg" style="width:800px;">
+
+```json
+{
+   "char siew":{
+      "accuracy":0.83094573,
+      "matches":[
+         {
+            "_id":"5ec50ddef0ab4835be506e60"
+         }
+      ]
+   },
+   "satay":{
+      "accuracy":0.41264403,
+      "matches":[
+         {
+            "_id":"5ec69d76f6a755c9867f6d7d"
+         }
+      ]
+   },
+   "Rice, chicken katsu with Japanese curry":{
+      "accuracy":0.20771155,
+      "matches":[
+         {
+            "_id":"5ec50134f0ab4835be506dfb"
+         }
+      ]
+   },
+   "fried prawn":{
+      "accuracy":0.19698375,
+      "matches":[
+         {
+            "_id":"5ec769f2d5f0ee625605a00a"
+         }
+      ]
+   },
+   "Don, unagi":{
+      "accuracy":0.14714266,
+      "matches":[
+         {
+            "_id":"5ec762c4d5f0ee6256059fc1"
+         }
+      ]
+   }
+}
+```
+
+### sample7.1.jpg
+
+<img src="sample7.1.jpg" style="width:800px;">
+
+```json
+curacy":0.80512905,
+      "matches":[
+         {
+            "_id":"5ec4ec2ef0ab4835be506d4e"
+         }
+      ]
+   },
+   "Peanut Pancake":{
+      "accuracy":0.74492925,
+      "matches":[
+         {
+            "_id":"5ec4fccaf0ab4835be506dd6"
+         }
+      ]
+   },
+   "Indian Pancake":{
+      "accuracy":0.6382542,
+      "matches":[
+         {
+            "_id":"5ec509bdf0ab4835be506e42"
+         }
+      ]
+   },
+   "salmon - grilled":{
+      "accuracy":0.32443687,
+      "matches":[
+         {
+            "_id":"5ec4edbcf0ab4835be506d5c"
+         }
+      ]
+   },
+   "corn":{
+      "accuracy":0.3051404,
+      "matches":[
+         {
+            "_id":"5ec500ddf0ab4835be506df8"
+         }
+      ]
+   }
+}
+```
+
+### sample8.1.jpg
+
+<img src="sample8.1.jpg" style="width:800px;">
+
+```json
+{
+   "steamed grouper":{
+      "accuracy":0.5890605,
+      "matches":[
+         {
+            "_id":"5ec4f78bf0ab4835be506dad"
+         }
+      ]
+   },
+   "green leafy vegetables":{
+      "accuracy":0.55409443,
+      "matches":[
+         {
+            "_id":"5ec7d0dff0693dad19f45522"
+         }
+      ]
+   },
+   "chawanmushi":{
+      "accuracy":0.23611078,
+      "matches":[
+         
+      ]
+   },
+   "miso soup":{
+      "accuracy":0.16285057,
+      "matches":[
+         {
+            "_id":"5ec77f2cd5f0ee625605a0f6"
+         }
+      ]
+   },
+   "dumpling":{
+      "accuracy":0.16045758,
+      "matches":[
+         {
+            "_id":"5ec758d7ec2d19094cf862f9"
+         }
+      ]
+   }
+}
+```
+
+### sample9.1.jpg (Waffle)
+
+<img src="sample9.1.jpg" style="width:800px;">
+
+```json
+{
+   "Apple":{
+      "accuracy":0.81607884,
+      "matches":[
+         {
+            "_id":"5ec5fcd5d5358d6275b6ea62"
+         }
+      ]
+   },
+   "longan":{
+      "accuracy":0.34965393,
+      "matches":[
+         {
+            "_id":"5ec60c835957fa1d4211109a"
+         }
+      ]
+   },
+   "Snacks and Chips":{
+      "accuracy":0.30286363,
+      "matches":[
+         {
+            "_id":"5ec6c26305c4ac62011c2b23"
+         }
+      ]
+   },
+   "miso soup":{
+      "accuracy":0.2504122,
+      "matches":[
+         {
+            "_id":"5ec77f2cd5f0ee625605a0f6"
+         }
+      ]
+   },
+   "cake rolls":{
+      "accuracy":0.19517992,
+      "matches":[
+         {
+            "_id":"5ec4f27ef0ab4835be506d82"
+         }
+      ]
+   }
+}
+```
+
+### sample10.1.jpg (Bak Kut Teh)
+
+<img src="sample10.1.jpg" style="width:800px;">
+
+```json
+{
+   "tortilla - plain":{
+      "accuracy":0.58792675,
+      "matches":[
+         {
+            "_id":"5ec4ebf3f0ab4835be506d48"
+         }
+      ]
+   },
+   "kueh lapis baked":{
+      "accuracy":0.37166807,
+      "matches":[
+         {
+            "_id":"5ec6c764bfe2612b26046181"
+         }
+      ]
+   },
+   "Snacks and Chips":{
+      "accuracy":0.2880268,
+      "matches":[
+         {
+            "_id":"5ec6c26305c4ac62011c2b23"
+         }
+      ]
+   },
+   "tau suan":{
+      "accuracy":0.2399188,
+      "matches":[
+         {
+            "_id":"5ec7b751a5d09c18c6fd9957"
+         }
+      ]
+   },
+   "Apple":{
+      "accuracy":0.21238707,
+      "matches":[
+         {
+            "_id":"5ec5fcd5d5358d6275b6ea62"
+         }
+      ]
+   }
+}
+```
+
+### sample11.1.jpg
+
+<img src="sample11.1.jpg" style="width:800px;">
+
+```json
+{
+   "fried chicken":{
+      "accuracy":0.78182846,
+      "matches":[
+         {
+            "_id":"5ec76773d5f0ee6256059ff1"
+         }
+      ]
+   },
+   "har cheong gai":{
+      "accuracy":0.66327274,
+      "matches":[
+         {
+            "_id":"5ec76fc8d5f0ee625605a044"
+         }
+      ]
+   },
+   "vadai":{
+      "accuracy":0.29160073,
+      "matches":[
+         {
+            "_id":"5ec7bbcaa5d09c18c6fd9985"
+         }
+      ]
+   },
+   "fried prawn":{
+      "accuracy":0.21781495,
+      "matches":[
+         {
+            "_id":"5ec769f2d5f0ee625605a00a"
+         }
+      ]
+   },
+   "Snacks and Chips":{
+      "accuracy":0.16291061,
+      "matches":[
+         {
+            "_id":"5ec6c26305c4ac62011c2b23"
+         }
+      ]
+   }
+}
+```
+
+### sample12.1.jpg
+
+<img src="sample12.1.jpg" style="width:800px;">
+
+```json
+{
+   "Claypot Rice":{
+      "accuracy":0.95312774,
+      "matches":[
+         {
+            "_id":"5ec75631ec2d19094cf862dd"
+         }
+      ]
+   },
+   "buckwheat":{
+      "accuracy":0.8788487,
+      "matches":[
+         {
+            "_id":"5ed751de1a7cba5ebbbf9a86"
+         }
+      ]
+   },
+   "hotplate tofu":{
+      "accuracy":0.16233684,
+      "matches":[
+         {
+            "_id":"5ec628f6c3154c0601ad601a"
+         }
+      ]
+   },
+   "Barley":{
+      "accuracy":0.0905433,
+      "matches":[
+         {
+            "_id":"5ec4ecbaf0ab4835be506d54"
+         }
+      ]
+   },
+   "beef noodle soup":{
+      "accuracy":0.06643989,
+      "matches":[
+         {
+            "_id":"5ec7602ad5f0ee6256059fa7"
+         }
+      ]
+   }
+}
+```
+
+### sample13.1.jpg
+
+<img src="sample13.1.jpg" style="width:800px;">
+
+```json
+Nasi Ambeng":{
+      "accuracy":0.5789025,
+      "matches":[
+         {
+            "_id":"5ec7838f2a0e1aaa65d6de86"
+         }
+      ]
+   },
+   "cereal prawns":{
+      "accuracy":0.47604355,
+      "matches":[
+         {
+            "_id":"5ec4fa4ef0ab4835be506dc0"
+         }
+      ]
+   },
+   "Pilaf, pea":{
+      "accuracy":0.4657474,
+      "matches":[
+         {
+            "_id":"5ec78b052a0e1aaa65d6ded6"
+         }
+      ]
+   },
+   "paella seafood":{
+      "accuracy":0.12647356,
+      "matches":[
+         {
+            "_id":"5ec79a6f2a0e1aaa65d6df77"
+         }
+      ]
+   }
+}
+```
+
+### test1.1.jpg
+
+<img src="test1.1.jpg" style="width:800px;">
+
+```json
+{
+   "satay":{
+      "accuracy":0.6833798,
+      "matches":[
+         {
+            "_id":"5ec69d76f6a755c9867f6d7d"
+         }
+      ]
+   },
+   "kueh lapis baked":{
+      "accuracy":0.6583981,
+      "matches":[
+         {
+            "_id":"5ec6c764bfe2612b26046181"
+         }
+      ]
+   },
+   "salmon - grilled":{
+      "accuracy":0.31045258,
+      "matches":[
+         {
+            "_id":"5ec4edbcf0ab4835be506d5c"
+         }
+      ]
+   },
+   "Don, unagi":{
+      "accuracy":0.2577026,
+      "matches":[
+         {
+            "_id":"5ec762c4d5f0ee6256059fc1"
+         }
+      ]
+   },
+   "Chinese fritters":{
+      "accuracy":0.24970213,
+      "matches":[
+         {
+            "_id":"5ec7b751a5d09c18c6fd9957"
+         }
+      ]
+   }
+}
+```
+
+
+### test4.1.jpg
+
+<img src="test4.1.jpg" style="width:800px;">
+
+```json
+{
+   "Persimmon":{
+      "accuracy":0.47304398,
+      "matches":[
+         {
+            "_id":"5ec611735957fa1d421110cc"
+         }
+      ]
+   },
+   "cherries":{
+      "accuracy":0.38489908,
+      "matches":[
+         {
+            "_id":"5ec606345957fa1d4211105c"
+         }
+      ]
+   },
+   "Indian Pancake":{
+      "accuracy":0.2849733,
+      "matches":[
+         {
+            "_id":"5ec509bdf0ab4835be506e42"
+         }
+      ]
+   },
+   "Apple":{
+      "accuracy":0.280191,
+      "matches":[
+         {
+            "_id":"5ec5fcd5d5358d6275b6ea62"
+         }
+      ]
+   },
+   "Pomelo":{
+      "accuracy":0.25700372,
+      "matches":[
+         {
+            "_id":"5ec613635957fa1d421110dc"
+         }
+      ]
+   }
+}
+```

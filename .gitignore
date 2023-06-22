@@ -12,10 +12,10 @@ cache/
 mlruns/
 
 # data
-foodsg-233/
+foodsg-233*/
 foodsg-233*.zip
 dataset*.zip
-dataset/
+dataset*/
 
 # docker
 *.tar

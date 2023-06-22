@@ -35,11 +35,11 @@ from keras.applications import DenseNet121
 from keras.applications import DenseNet201
 from keras.applications import ResNet152V2
 from keras.applications import InceptionResNetV2
-
-from keras.optimizers import Adam
 # https://github.com/keras-team/keras/issues/17199
 # from keras.applications import EfficientNetB3 have bugs
 from networks.efficientnet import EfficientNetB3
+from vit_keras.vit import vit_l32
+from keras.optimizers import Adam
 
 
 DATASET_DIRS = glob.glob("dataset/*")
@@ -52,7 +52,7 @@ TEST_DIRS = glob.glob("dataset/test/*")
 
 BATCH_SIZE = 32
 IMAGE_SIZE = 512
-MODEL = "DenseNet121"
+MODEL = "VitL32"
 CHECKPOINT_PATH = "checkpoints/" + MODEL + ".h5"
 FIGURE_PATH = "figures/" + MODEL + ".png"
 MODEL_PATH = "models/" + MODEL + ".h5"
@@ -112,16 +112,22 @@ def acc_top5(y_true, y_pred):
 
 def compile_model():
     if not os.path.exists(CHECKPOINT_PATH):
-        net = DenseNet121(
-            input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3),
-            weights="imagenet",
-            include_top=False,
-            # classes=len(TRAIN_DIRS)
-        )
+        # net = DenseNet121(
+        #     input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3),
+        #     weights="imagenet",
+        #     include_top=False,
+        #     # classes=len(TRAIN_DIRS)
+        # )
+        net = vit_l32(
+            image_size=IMAGE_SIZE,
+            activation="softmax",
+            pretrained=True,
+            pretrained_top=False,
+            include_top=False)
         for layer in net.layers:
             layer.trainable = False
         x = net.output
-        x = GlobalAveragePooling2D()(x)
+        # x = GlobalAveragePooling2D()(x)
         x = Dense(4096, activation="relu")(x)
         x = Dropout(0.2)(x)
         x = BatchNormalization()(x)

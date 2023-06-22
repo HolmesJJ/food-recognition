@@ -7,8 +7,10 @@ docker
 pandas
 Pillow
 seaborn
+vit-keras
 Flask-Cors
 matplotlib
 tensorflow
 flask_restful
 opencv-python
+tensorflow-addons

@@ -727,7 +727,8 @@
 <img src="test4.png" style="width:800px;">
 
 ```json
-  "chicken rice":{
+{
+   "chicken rice":{
       "accuracy":0.6688736627499262,
       "matches":[
          {
@@ -1086,7 +1087,8 @@
 <img src="sample4.1.jpg" style="width:800px;">
 
 ```json
- "mixed grills":{
+{
+   "mixed grills":{
       "accuracy":0.6025791,
       "matches":[
          {
@@ -1232,7 +1234,8 @@
 <img src="sample7.1.jpg" style="width:800px;">
 
 ```json
-curacy":0.80512905,
+{
+   "curacy":0.80512905,
       "matches":[
          {
             "_id":"5ec4ec2ef0ab4835be506d4e"
@@ -1522,7 +1525,8 @@ curacy":0.80512905,
 <img src="sample13.1.jpg" style="width:800px;">
 
 ```json
-Nasi Ambeng":{
+{
+   "Nasi Ambeng":{
       "accuracy":0.5789025,
       "matches":[
          {

@@ -38,7 +38,7 @@ from keras.applications import InceptionResNetV2
 # https://github.com/keras-team/keras/issues/17199
 # from keras.applications import EfficientNetB3 have bugs
 from networks.efficientnet import EfficientNetB3
-from vit_keras.vit import vit_l32
+from vit_keras.vit import vit_b32
 from keras.optimizers import Adam
 
 
@@ -52,7 +52,7 @@ TEST_DIRS = glob.glob("dataset/test/*")
 
 BATCH_SIZE = 32
 IMAGE_SIZE = 512
-MODEL = "VitL32"
+MODEL = "VitB32"
 CHECKPOINT_PATH = "checkpoints/" + MODEL + ".h5"
 FIGURE_PATH = "figures/" + MODEL + ".png"
 MODEL_PATH = "models/" + MODEL + ".h5"
@@ -118,7 +118,7 @@ def compile_model():
         #     include_top=False,
         #     # classes=len(TRAIN_DIRS)
         # )
-        net = vit_l32(
+        net = vit_b32(
             image_size=IMAGE_SIZE,
             activation="softmax",
             pretrained=True,

@@ -8,6 +8,7 @@ from keras.utils import load_img
 from keras.utils import img_to_array
 from keras.models import load_model
 from keras.metrics import top_k_categorical_accuracy
+from vit_keras.vit import vit_l32  # keep this line for VIT model!
 
 
 CATEGORIES_PATH = "categories.csv"

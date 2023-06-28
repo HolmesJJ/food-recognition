@@ -14,7 +14,7 @@ from vit_keras.vit import vit_l32  # keep this line for VIT model!
 CATEGORIES_PATH = "categories.csv"
 MATCHES_PATH = "food-sg-233-empower-food-matched.csv"
 
-MODELS = ["sg-food-233-xception", "sg-food-233-densenet121", "sg-food-233-densenet201",
+MODELS = ["sg-food-233-vitb32", "sg-food-233-xception", "sg-food-233-densenet121", "sg-food-233-densenet201",
           "sg-food-233-resnet152v2", "sg-food-233-inceptionv3", "sg-food-233-inceptionresnetv2"]
 CHECKPOINT_PATHS = ["checkpoints/" + MODEL + ".h5" for MODEL in MODELS]
 

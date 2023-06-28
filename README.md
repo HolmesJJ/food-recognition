@@ -1,10 +1,14 @@
 # Food Recognition
 
+# Dataset
+
+* [sg-food-233](https://drive.google.com/file/d/15jF8sDkdr7TRrV5xhG1QAq2lm8qhdcn2/view?usp=sharing)
+
 ## Experiments
 
 | Dataset | Neural Network | Accuracy | Accuracy Top 5 |
 | :----: | :----: | :----: | :----: |
-| sg-food-233 | [VIT-B32 (Training)]() | % | % |
+| sg-food-233 | [VIT-B32 (Training)](https://drive.google.com/file/d/158QRNobdUAq81yKnf-DQUurDXS7X7Cu8/view?usp=share_link) | 77.30% | 93.39% |
 | sg-food-233 | [Xception](https://drive.google.com/file/d/1W75SAHYP7zhubiU4QzTPhqQuC_CvZWjJ/view?usp=share_link) | 69.08% | 89.24% |
 | sg-food-233 | [DenseNet121](https://drive.google.com/file/d/1-7GiASFCHFlM_iS9WDDtP1SuJAV-Dbw6/view?usp=share_link) | 68.70% | 88.60% |
 | sg-food-233 | [DenseNet201](https://drive.google.com/file/d/1fFNB8SYGkWA-0j9Y2jcgBec7VNn1j5KV/view?usp=share_link) | 70.30% | 89.49% |

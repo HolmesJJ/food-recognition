@@ -38,7 +38,7 @@ from keras.applications import InceptionResNetV2
 # https://github.com/keras-team/keras/issues/17199
 # from keras.applications import EfficientNetB3 have bugs
 from networks.efficientnet import EfficientNetB3
-from vit_keras.vit import vit_b32
+from vit_keras.vit import vit_l32
 from keras.optimizers import Adam
 
 
@@ -52,7 +52,7 @@ TEST_DIRS = glob.glob("dataset/test/*")
 
 BATCH_SIZE = 32
 IMAGE_SIZE = 512
-MODEL = "VitB32"
+MODEL = "VitL32"
 CHECKPOINT_PATH = "checkpoints/" + MODEL + ".h5"
 FIGURE_PATH = "figures/" + MODEL + ".png"
 MODEL_PATH = "models/" + MODEL + ".h5"
@@ -81,7 +81,7 @@ def run_data_augmentation():
         zoom_range=0.2,
         horizontal_flip=True,
         vertical_flip=True,
-        brightness_range=[0.5, 2.0],
+        brightness_range=[0.5, 3.0],
         width_shift_range=0.2,
         height_shift_range=0.2,
         rotation_range=20,
@@ -118,7 +118,7 @@ def compile_model():
         #     include_top=False,
         #     # classes=len(TRAIN_DIRS)
         # )
-        net = vit_b32(
+        net = vit_l32(
             image_size=IMAGE_SIZE,
             activation="softmax",
             pretrained=True,
@@ -128,6 +128,12 @@ def compile_model():
             layer.trainable = False
         x = net.output
         # x = GlobalAveragePooling2D()(x)
+        x = Dense(4096, activation="relu")(x)
+        x = Dropout(0.2)(x)
+        x = BatchNormalization()(x)
+        x = Dense(4096, activation="relu")(x)
+        x = Dropout(0.2)(x)
+        x = BatchNormalization()(x)
         x = Dense(4096, activation="relu")(x)
         x = Dropout(0.2)(x)
         x = BatchNormalization()(x)
